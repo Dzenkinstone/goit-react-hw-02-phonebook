@@ -8,13 +8,14 @@ export const Form = styled.form`
   border: 1px solid black;
 `;
 export const Label = styled.label`
+  display: flex;
+  flex-direction: column;
   font-size: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 `;
 
 export const Input = styled.input`
   width: 200px;
-  margin-bottom: 30px;
   &:focus {
     outline: none;
     border: 2px solid rgb(0, 191, 255);
