@@ -24,6 +24,7 @@ export const Input = styled(Field)`
 `;
 
 export const Error = styled(ErrorMessage)`
+  color: red;
   margin-top: 10px;
   font-size: 15px;
 `;
