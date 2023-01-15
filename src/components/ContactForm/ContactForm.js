@@ -1,28 +1,31 @@
 import { React, Component } from 'react';
-import { Form, Input, Label, Button } from './ContactForm.styled';
+import { Formik } from 'formik';
+import * as yup from 'yup';
+import { MainForm, Input, Label, Button, Error } from './ContactForm.styled';
 
-export class ContactForm extends Component {
-  state = {
+export const ContactForm = ({ onSubmit }) => {
+  const schema = yup.object().shape({
+    name: yup.string().required(),
+    number: yup.string().min(7).max(13).required(),
+  });
+
+  const initialValues = {
     name: '',
     number: '',
   };
 
-  handleChange = event => {
-    this.setState({ [event.currentTarget.name]: event.currentTarget.value });
+  const handleSubmit = (values, { resetForm }) => {
+    onSubmit(values);
+    resetForm();
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-    this.props.onSubmit(this.state);
-    this.setState({
-      name: '',
-      number: '',
-    });
-  };
-
-  render() {
-    return (
-      <Form onSubmit={this.handleSubmit}>
+  return (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={schema}
+      onSubmit={handleSubmit}
+    >
+      <MainForm>
         <Label htmlFor="name">
           Name
           <Input
@@ -30,10 +33,9 @@ export class ContactForm extends Component {
             name="name"
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            onChange={this.handleChange}
-            value={this.state.name}
             required
           />
+          <Error name="name" component="div" />
         </Label>
         <Label htmlFor="number">
           Number
@@ -42,13 +44,12 @@ export class ContactForm extends Component {
             name="number"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            onChange={this.handleChange}
-            value={this.state.number}
             required
           />
+          <Error name="number" component="div" />
         </Label>
         <Button type="submit">Add contact</Button>
-      </Form>
-    );
-  }
-}
+      </MainForm>
+    </Formik>
+  );
+};
